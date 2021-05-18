@@ -1,4 +1,4 @@
-from wiki_interface import *
+from wikiAPI import *
 
 def heuristic(a, b) -> int:
     """
