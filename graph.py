@@ -11,16 +11,17 @@ class article:
     article class
     """
 
-    def __init__(self, prev, target) -> None:
+    def __init__(self, prev, target):
         """
         Initializes based on [urls/titles/nodes]
         """
         # initialize other stuff
+        self.prev = prev
         self.g = prev.g + 1
         self.h = heuristic(self, target)
         self.f = self.g + self.h
 
-    def get_next(self) -> None:
+    def get_next(self) -> list:
         """
         get list of connected [urls/titles/nodes]
         """
@@ -32,8 +33,8 @@ class PQ:
     """
     heap = []
 
-    def __init__(self) -> None:
-        heap = [0]
+    def __init__(self, root):
+        heap = [0, root]
 
     def insert(self, new) -> None:
         """
@@ -41,14 +42,28 @@ class PQ:
         """
         pass
 
-    def remove(self, to_remove) -> None:
+    def pop(self, to_remove) -> article:
         """
-        remove element from priority queue
+        pops minimum element from priority queue
         """
         pass
 
-def a_star(source, target) -> list:
+def a_star(source: article, target: article) -> list:
     """
     Returns path from source to target using A* search algorithm
     """
-    pass
+    cur = source
+    queue = PQ(cur)
+    while (cur != target):
+        nexts = cur.get_next()
+        for next in nexts:
+            queue.insert(next)
+        cur = queue.pop()
+    
+    path = [cur]
+
+    while path[0] != source:
+        cur = cur.prev
+        path.insert(0, cur)
+    
+    return path
