@@ -39,7 +39,30 @@ class Article:
         """
         return list of connected (children) article object using wikipedia API
         """
-        pass
+        s = requests.Session()
+
+        url = "https://en.wikipedia.org/w/api.php"
+
+        params = {
+            "action": "query",
+            "format": "json",
+            "titles": self.title,
+            "prop": "links",
+            "pllimit": "max"
+        }
+
+        titles_so_far = []
+
+        r = s.get(url=url, params=params)
+        data = r.json()
+
+        pages = data["query"]["pages"]
+
+        for k, v in pages.items():
+            for l in v["links"]:
+                titles_so_far.append(l["title"])
+
+        return [Article(child, self.target, self.title) for child in titles_so_far]
 
 class PQ:
     """
