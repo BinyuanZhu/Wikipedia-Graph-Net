@@ -37,7 +37,7 @@ class Article:
 
     def get_children(self) -> list:
         """
-        get list of connected [urls/titles/nodes]
+        return list of connected (children) nodes using wikipedia API
         """
         pass
 
