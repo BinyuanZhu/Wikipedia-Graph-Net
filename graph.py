@@ -1,4 +1,6 @@
-from wikiAPI import *
+from _typeshed import NoneType
+from typing import Union
+
 
 def heuristic(a, b) -> int:
     """
@@ -6,22 +8,34 @@ def heuristic(a, b) -> int:
     """
     pass
 
-class article:
+class Article:
     """
     article class
     """
+    title: str
+    target: str
+    g: float
+    f: float
+    parent: Union[object, NoneType]
 
-    def __init__(self, prev, target):
+    def __init__(self, title: str, target: str, parent: Union[object, NoneType]):
         """
         Initializes based on [urls/titles/nodes]
         """
-        # initialize other stuff
-        self.prev = prev
-        self.g = prev.g + 1
-        self.h = heuristic(self, target)
-        self.f = self.g + self.h
+        self.title = title
+        self.target = target
 
-    def get_next(self) -> list:
+        if parent:
+            self.parent = parent
+            self.g = parent.g + 1
+        else:
+            self.parent = None
+            self.g = 0
+
+        h = heuristic(title, target)
+        self.f = self.g + h
+
+    def get_children(self) -> list:
         """
         get list of connected [urls/titles/nodes]
         """
@@ -36,26 +50,26 @@ class PQ:
     def __init__(self, root):
         heap = [0, root]
 
-    def insert(self, new) -> None:
+    def insert(self, new: Article) -> None:
         """
         Insert new element in Priority queue
         """
         pass
 
-    def pop(self, to_remove) -> article:
+    def pop(self, to_remove: str) -> Article:
         """
         pops minimum element from priority queue
         """
         pass
 
-def a_star(source: article, target: article) -> list:
+def a_star(source: str, target: str) -> list:
     """
     Returns path from source to target using A* search algorithm
     """
-    cur = source
-    queue = PQ(cur)
+    cur : Article = Article(source, target, None)
+    queue : PQ = PQ(cur)
     while (cur != target):
-        nexts = cur.get_next()
+        nexts = cur.get_children()
         for next in nexts:
             queue.insert(next)
         cur = queue.pop()
@@ -63,7 +77,7 @@ def a_star(source: article, target: article) -> list:
     path = [cur]
 
     while path[0] != source:
-        cur = cur.prev
-        path.insert(0, cur)
+        cur = cur.parent
+        path.insert(0, cur.title)
     
     return path
