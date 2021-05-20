@@ -35,9 +35,9 @@ class Article:
         h = heuristic(title, target)
         self.f = self.g + h
 
-    def get_children(self) -> list:
+    def get_children(self) -> list[Article]:
         """
-        return list of connected (children) nodes using wikipedia API
+        return list of connected (children) article object using wikipedia API
         """
         pass
 
