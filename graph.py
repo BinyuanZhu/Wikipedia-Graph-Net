@@ -1,12 +1,15 @@
-from _typeshed import NoneType
-from typing import Union
+from __future__ import annotations
+import typing
+import requests
+from typing import List
 
 
 def heuristic(a, b) -> int:
     """
     Returns predicted cost (distance) from a to b
     """
-    pass
+    return 0
+
 
 class Article:
     """
@@ -16,9 +19,9 @@ class Article:
     target: str
     g: float
     f: float
-    parent: Union[object, NoneType]
+    parent: typing.Union[Article, type(None)]
 
-    def __init__(self, title: str, target: str, parent: Union[object, NoneType]):
+    def __init__(self, title: str, target: str, parent: typing.Union[Article, type(None)]):
         """
         Initializes based on [urls/titles/nodes]
         """
@@ -35,7 +38,7 @@ class Article:
         h = heuristic(title, target)
         self.f = self.g + h
 
-    def get_children(self) -> list[Article]:
+    def get_children(self) -> List[Article]:
         """
         return list of connected (children) article object using wikipedia API
         """
@@ -64,6 +67,7 @@ class Article:
 
         return [Article(child, self.target, self.title) for child in titles_so_far]
 
+
 class PQ:
     """
     [Heap] implementation of priority queue
@@ -85,22 +89,23 @@ class PQ:
         """
         pass
 
+
 def a_star(source: str, target: str) -> list:
     """
     Returns path from source to target using A* search algorithm
     """
-    cur : Article = Article(source, target, None)
-    queue : PQ = PQ(cur)
-    while (cur != target):
+    cur: Article = Article(source, target, None)
+    queue: PQ = PQ(cur)
+    while cur != target:
         nexts = cur.get_children()
-        for next in nexts:
-            queue.insert(next)
+        for curr in nexts:
+            queue.insert(curr)
         cur = queue.pop()
-    
+
     path = [cur]
 
     while path[0] != source:
         cur = cur.parent
         path.insert(0, cur.title)
-    
+
     return path
