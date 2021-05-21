@@ -10,7 +10,8 @@ def index():
         # get url that the user has entered
         try:
             start = request.form['start']
-            results.append(start)
+            end = request.form['end']
+            print('Starting at:' + start + "\n" + 'Ending at:' + end)
         except:
             errors.append(
                 "Unable to get article. Please make sure it's valid and try again."
