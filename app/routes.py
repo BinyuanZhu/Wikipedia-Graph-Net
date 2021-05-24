@@ -1,19 +1,22 @@
 from app import app
 import requests
 from flask import Flask, render_template, request
+from main import main
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    data = ['Fill', 'Filler', 'Fillest']
     errors = []
     results = {}
+    swap = False
     if request.method == "POST":
         # get url that the user has entered
-        try:
-            start = request.form['start']
-            end = request.form['end']
-            print('Starting at:' + start + "\n" + 'Ending at:' + end)
-        except:
-            errors.append(
-                "Unable to get article. Please make sure it's valid and try again."
-            )
-    return render_template('index.html', errors=errors, results=results)
+        swap = True
+        start = request.form['start']
+        end = request.form['end']
+        data = main(start, end)
+    if swap:
+        return render_template('graph.html', data = data)
+    else:
+        return render_template('index.html', errors=errors, results=results)
+
