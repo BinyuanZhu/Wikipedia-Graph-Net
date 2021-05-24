@@ -1,7 +1,8 @@
 from app import app
-import requests
 from flask import Flask, render_template, request
-from main import main
+
+def output(start: str, end: str):
+    return[start, 'Middle', end]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -14,7 +15,7 @@ def index():
         swap = True
         start = request.form['start']
         end = request.form['end']
-        data = main(start, end)
+        data = output(start, end)
     if swap:
         return render_template('graph.html', data = data)
     else:
