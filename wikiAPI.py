@@ -23,10 +23,15 @@ def get_JSON(link: str) -> dict:
     r = s.get(link)
     return r.json()
 
-
 def get_title(link: str) -> str:
     file = get_JSON(link)
     id = list(file['query']['pages'])[0]
     return file['query']['pages'][id]['title']
+
+def get_url(title: str) -> str:
+    articleURL = "https://en.wikipedia.org/wiki/TEMP"
+    query = title.replace(" ", "%20")
+    return articleURL.replace("TEMP", query)
+
 
 # print(get_JSON(mockURL))
