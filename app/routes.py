@@ -1,12 +1,12 @@
 from app import app
+from wikiAPI import *
 from flask import Flask, render_template, request
 
 def output(start: str, end: str):
-    return[start, 'Middle', end]
+    return [start, "Middle", end]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    data = ['Fill', 'Filler', 'Fillest']
     errors = []
     results = {}
     swap = False
@@ -16,8 +16,9 @@ def index():
         start = request.form['start']
         end = request.form['end']
         data = output(start, end)
+        links = {title: get_url(title) for title in data}
     if swap:
-        return render_template('graph.html', data = data)
+        return render_template('graph.html', data = data, links = links)
     else:
         return render_template('index.html', errors=errors, results=results)
 
