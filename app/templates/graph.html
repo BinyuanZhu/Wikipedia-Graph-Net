@@ -1,15 +1,13 @@
 <html>
     <head>
         <title>Wikipedia Graph Net</title>
-        <style>
-            .container {
-              max-width: 1000px;
-            }
-          </style>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
     </head>
     <body>
-        {% for element in data %}
-        <div><p>{{element}}</p></div>
-        {% endfor %}
+        <div class="container">
+            {% for element in data %}
+            <div><p>{{element}}</p></div>
+            {% endfor %}
+        </div>
     </body>
 </html>

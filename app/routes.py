@@ -1,8 +1,10 @@
 from app import app
 from flask import Flask, render_template, request
 
+
 def output(start: str, end: str):
     return[start, 'Middle', end]
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -17,7 +19,7 @@ def index():
         end = request.form['end']
         data = output(start, end)
     if swap:
-        return render_template('graph.html', data = data)
+        return render_template('graph.html', data=data)
     else:
         return render_template('index.html', errors=errors, results=results)
 

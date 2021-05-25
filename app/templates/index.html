@@ -1,29 +1,24 @@
 <html>
     <head>
-        <title>Wikipedia Graph Net</title>
-        <style>
-            .container {
-              max-width: 1000px;
-            }
-          </style>
+        <title>WikiRacer</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
     </head>
     <body>
-        <label for="intial">Intial Link:</label><br>
         <div class="container">
             <h1>Find the distance between any two Wikipedia Articles!</h1>
             <form role="form" method='POST' action='/'>
         
               <div class="form-group">
-                <input type="text" name="start" class="form-control" id="start-box" placeholder="Enter Start Title" style="max-width: 300px;" autofocus required>
+                <input type="text" name="start" class="form-control" id="start-box" placeholder="Enter Start Title" autofocus required>
               </div>
               <div class="form-group">
-                <input type="text" name="end" class="form-control" id="end-box" placeholder="Enter End Title" style="max-width: 300px;" autofocus required>
+                <input type="text" name="end" class="form-control" id="end-box" placeholder="Enter End Title" autofocus required>
               </div>
-              <button type="submit" class="btn btn-default">Submit</button>
+              <button type="submit" class="btn">Submit</button>
 
             </form>
             <br>
             <h4>{{ start }}</h4>
-          </div>
+        </div>
     </body>
 </html>
