@@ -5,9 +5,17 @@
     </head>
     <body>
         <div class="container">
+            {% if length == 1 %}
+            <p>There is {{length}} article between the two articles. </p>
+            {% else %}
+            <p>There are {{length}} articles between the two articles. </p>
+            {% endif %}
+
             {% for element in data %}
-            <a href= {{links[element]}}> {{element}}</a>
-            <br>
+            <div class = "bubble">
+                <a href= {{links[element]}}> {{element}}</a>
+                <br>
+            </div>
             {% endfor %}
         </div>
     </body>

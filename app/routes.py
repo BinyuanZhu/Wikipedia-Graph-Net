@@ -4,7 +4,7 @@ from flask import Flask, render_template, request
 
 
 def output(start: str, end: str):
-    return [start, "Middle", end]
+    return [start, "1", "2", "3", end]
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -19,8 +19,9 @@ def index():
         end = request.form['end']
         data = output(start, end)
         links = {title: get_url(title) for title in data}
+        length = (len(data) - 2)
     if swap:
-        return render_template('graph.html', data=data, links=links)
+        return render_template('graph.html', data=data, links=links, length = length)
     else:
         return render_template('index.html', errors=errors, results=results)
 

@@ -1,13 +1,20 @@
 .container{
     margin: auto;
     width: 50%;
-    border: 3px solid black;
+    border: 3px solid rgb(255, 255, 255);
     padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    text-align:center;
 }
 
-.form-group{
-    margin: auto;
-    padding: 10px;
+input[type = text]{
+    width: 100%;  
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .form-control{
@@ -15,12 +22,23 @@
 }
 
 .btn{
-    background-color: black;
+    background-color: rgb(108, 171, 196);
     border: none;
-    color: white;
-    padding: 15px 32px;
+    color: rgb(0, 0, 0);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 12px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.bubble{
+    text-align: center;
+    margin: 4px;
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
 }
