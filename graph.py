@@ -38,7 +38,7 @@ class Article:
         h = heuristic(title, target)
         self.f = self.g + h
 
-    def get_children(self) -> List[Article]:
+    def get_children(self, cont: typing.Union[str, type(None)]) -> List[str]:
         """
         return list of connected (children) article object using wikipedia API
         """
@@ -46,13 +46,23 @@ class Article:
 
         url = "https://en.wikipedia.org/w/api.php"
 
-        params = {
-            "action": "query",
-            "format": "json",
-            "titles": self.title,
-            "prop": "links",
-            "pllimit": "max"
-        }
+        if cont is None:
+            params = {
+                "action": "query",
+                "format": "json",
+                "titles": self.title,
+                "prop": "links",
+                "pllimit": "max"
+            }
+        else:
+            params = {
+                "action": "query",
+                "format": "json",
+                "titles": self.title,
+                "prop": "links",
+                "pllimit": "max",
+                "plcontinue": cont
+            }
 
         titles_so_far = []
 
@@ -65,7 +75,14 @@ class Article:
             for l in v["links"]:
                 titles_so_far.append(l["title"])
 
-        return [Article(child, self.target, self.title) for child in titles_so_far]
+        if "batchcomplete" in data:
+            return titles_so_far
+        else:
+            contHolder = data["continue"]["plcontinue"]
+            titles_so_far.extend(self.get_children(contHolder))
+            return titles_so_far
+
+        # return [Article(child, self.target, self.title) for child in titles_so_far]
 
 
 class PQ:
