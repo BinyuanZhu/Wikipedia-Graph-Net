@@ -1,15 +1,31 @@
 from __future__ import annotations
 import typing
 import requests
+from sklearn.feature_extraction.text import TfidfVectorizer
+from bs4 import BeautifulSoup
+from wikiAPI import get_JSON
 from typing import List
 
 
-def heuristic(a: str, b: str) -> int:
+def heuristic(a: str, b: str):
     """
-    Returns predicted cost (distance) from two articles a to b, through the cosine similarity of two generated
+    Returns predicted cost (distance) from two titles a to b, through the cosine similarity of two generated
     term-document matrices of the article. The heuristic in this case is purely semantic.
-    """
 
+    The HTML enriched query for the JSON is:
+    https://en.wikipedia.org/w/api.php?action=parse&page=TITLE&prop=text&formatversion=2&format=json
+    """
+    query = "https://en.wikipedia.org/w/api.php?action=parse&page=TEMP&prop=text&formatversion=2&format=json"
+    startURL = query.replace("TEMP", a)
+    endURL = query.replace("TEMP", b)
+    # text processing using SOUP
+    initialSoup = BeautifulSoup(get_JSON(startURL)['parse']['text'], 'html.parser')
+    finalSoup = BeautifulSoup(get_JSON(endURL)['parse']['text'], 'html.parser')
+    # generate term-document matrices
+    vect = TfidfVectorizer(min_df=1)
+    tfidf = vect.fit_transform([initialSoup.get_text(), finalSoup.get_text()])
+    # temp return of cosine matrix, not sure what to do with this yet
+    return (tfidf * tfidf.T).A
 
 
 class Article:
