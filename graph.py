@@ -4,11 +4,12 @@ import requests
 from typing import List
 
 
-def heuristic(a, b) -> int:
+def heuristic(a: str, b: str) -> int:
     """
-    Returns predicted cost (distance) from a to b
+    Returns predicted cost (distance) from two articles a to b, through the cosine similarity of two generated
+    term-document matrices of the article. The heuristic in this case is purely semantic.
     """
-    return 0
+
 
 
 class Article:
