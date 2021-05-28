@@ -1,6 +1,8 @@
 from __future__ import annotations
 import typing
 import requests
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from bs4 import BeautifulSoup
 from wikiAPI import get_JSON
@@ -22,10 +24,11 @@ def heuristic(a: str, b: str):
     initialSoup = BeautifulSoup(get_JSON(startURL)['parse']['text'], 'html.parser')
     finalSoup = BeautifulSoup(get_JSON(endURL)['parse']['text'], 'html.parser')
     # generate term-document matrices
-    vect = TfidfVectorizer(min_df=1)
-    tfidf = vect.fit_transform([initialSoup.get_text(), finalSoup.get_text()])
-    # temp return of cosine matrix, not sure what to do with this yet
-    return (tfidf * tfidf.T).A
+    corpus = [initialSoup.get_text().replace('\n', ' '), finalSoup.get_text().replace('\n', ' ')]
+    vect = TfidfVectorizer()
+    mat = vect.fit_transform(corpus)
+    # return cosine similarity
+    return cosine_similarity(mat[0:1], mat)
 
 
 class Article:
