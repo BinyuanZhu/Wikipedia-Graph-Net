@@ -9,7 +9,7 @@ from wikiAPI import get_JSON
 from typing import List
 
 
-def heuristic(a: str, b: str):
+def heuristic(a: str, b: str) -> float:
     """
     Returns predicted cost (distance) from two titles a to b, through the cosine similarity of two generated
     term-document matrices of the article. The heuristic in this case is purely semantic.
@@ -28,7 +28,7 @@ def heuristic(a: str, b: str):
     vect = TfidfVectorizer()
     mat = vect.fit_transform(corpus)
     # return cosine similarity
-    return cosine_similarity(mat[0:1], mat)
+    return cosine_similarity(mat[0:1], mat)[0][1]
 
 
 class Article:
