@@ -1,7 +1,6 @@
 from __future__ import annotations
 import typing
 import requests
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from bs4 import BeautifulSoup
@@ -33,7 +32,13 @@ def heuristic(a: str, b: str) -> float:
 
 class Article:
     """
-    article class
+    This is the article class that represents each Wikipedia article.
+
+    Instance Variables:
+        - title: str that represents the title of the article
+        - target: the final target given by the user
+        - g:
+        - f:
     """
     title: str
     target: str
@@ -60,7 +65,7 @@ class Article:
 
     def get_children(self, cont: typing.Union[str, type(None)]) -> List[str]:
         """
-        return list of connected (children) article object using wikipedia API
+        Return list of connected (children) article object using the wikipedia API functions.
         """
         s = requests.Session()
 
@@ -107,7 +112,7 @@ class Article:
 
 class PQ:
     """
-    [Heap] implementation of priority queue
+    MinHeap implementation of a priority queue for A* search.
     """
     heap = []
 
@@ -129,7 +134,7 @@ class PQ:
 
 def a_star(source: str, target: str) -> list:
     """
-    Returns path from source to target using A* search algorithm
+    Returns path from source to target using A* search algorithm.
     """
     cur: Article = Article(source, target, None)
     queue: PQ = PQ(cur)

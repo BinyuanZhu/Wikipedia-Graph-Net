@@ -19,18 +19,27 @@ def get_links(title: str) -> str:
 
 
 def get_JSON(link: str) -> dict:
+    """
+    Given a query that can be assumed to be a valid Wikipedia API link to a JSON format, get the JSON data back.
+    """
     s = requests.Session()
     r = s.get(link)
     return r.json()
 
 
 def get_title(link: str) -> str:
+    """
+    Given a query that can be assumed to be a valid Wikipedia API link to a JSON format, get the title to the article.
+    """
     file = get_JSON(link)
     id = list(file['query']['pages'])[0]
     return file['query']['pages'][id]['title']
 
 
 def get_url(title: str) -> str:
+    """
+    Given a query that can be assumed to be a valid Wikipedia title, get the link to the article.
+    """
     articleURL = "https://en.wikipedia.org/wiki/TEMP"
     query = title.replace(" ", "%20")
     return articleURL.replace("TEMP", query)
