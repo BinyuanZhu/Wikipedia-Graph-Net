@@ -13,7 +13,7 @@ def heuristic_0(a: str, b: str) -> float:
     return 0
 
 
-def full_cosine_heuristic(a: str, b: str) -> float:
+def heuristic_1(a: str, b: str) -> float:
     """
     Returns predicted cost (distance) from two titles a to b, through the cosine similarity of two generated
     term-document matrices of the article. The heuristic in this case is purely semantic.
@@ -32,26 +32,33 @@ def full_cosine_heuristic(a: str, b: str) -> float:
     vect = TfidfVectorizer()
     mat = vect.fit_transform(corpus)
     # return cosine similarity
-    return 2/cosine_similarity(mat[0:1], mat)[0][1]
+    return cosine_similarity(mat[0:1], mat)[0][1]
 
 
-def intro_cosine_heuristic(a: str, b: str):
+def heuristic_2(a: str, b: str):
     """
     Returns predicted cost (distance) from two titles a to b, through the cosine similarity of two generated
     term-document matrices of the article. The heuristic in this case is purely semantic.
 
     The HTML enriched query for the JSON is:
-    https://en.wikipedia.org/api/rest_v1/page/summary/TITLE
+    https://en.wikipedia.org/w/api.php?action=query&titles=TITLE&prop=extracts&format=json&exintro=1
     """
-    query = "https://en.wikipedia.org/api/rest_v1/page/summary/TEMP"
-    startURL = query.replace("TEMP", a.replace(" ", "_"))
-    endURL = query.replace("TEMP", b.replace(" ", "_"))
+    query = "https://en.wikipedia.org/w/api.php?action=query&titles=TEMP&prop=extracts&format=json&exintro=1"
+    startURL = query.replace("TEMP", a.replace(" ", "%20"))
+    endURL = query.replace("TEMP", b.replace(" ", "%20"))
+    # text processing using SOUP
+    startText = get_JSON(startURL)['query']['pages']
+    endText = get_JSON(endURL)['query']['pages']
+    startId = list(startText)[0]
+    endId = list(endText)[0]
+    initialSoup = BeautifulSoup(startText[startId]['extract'], 'html.parser')
+    finalSoup = BeautifulSoup(endText[endId]['extract'], 'html.parser')
     # generate term-document matrices
-    corpus = [get_JSON(startURL)['extract'], get_JSON(endURL)['extract']]
+    corpus = [initialSoup.get_text().replace('\n', ' '), finalSoup.get_text().replace('\n', ' ')]
     vect = TfidfVectorizer()
     mat = vect.fit_transform(corpus)
     # return cosine similarity
-    return 2/cosine_similarity(mat[0:1], mat)[0][1]
+    return cosine_similarity(mat[0:1], mat)[0][1]
 
 
 class Article:
@@ -201,4 +208,4 @@ def a_star(source: str, target: str, heuristic: type(heuristic_0)) -> list:
     return path
 
 
-print(a_star("Nucleus", "Tehran", heuristic_0))
+# print(a_star("Nucleus", "Tehran", heuristic_0))
