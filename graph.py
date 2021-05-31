@@ -8,7 +8,7 @@ from wikiAPI import get_JSON
 from typing import List
 
 
-def heuristic(a: str, b: str) -> float:
+def full_cosine_heuristic(a: str, b: str) -> float:
     """
     Returns predicted cost (distance) from two titles a to b, through the cosine similarity of two generated
     term-document matrices of the article. The heuristic in this case is purely semantic.
@@ -17,8 +17,8 @@ def heuristic(a: str, b: str) -> float:
     https://en.wikipedia.org/w/api.php?action=parse&page=TITLE&prop=text&formatversion=2&format=json
     """
     query = "https://en.wikipedia.org/w/api.php?action=parse&page=TEMP&prop=text&formatversion=2&format=json"
-    startURL = query.replace("TEMP", a)
-    endURL = query.replace("TEMP", b)
+    startURL = query.replace("TEMP", a.replace(" ", "%20"))
+    endURL = query.replace("TEMP", b.replace(" ", "%20"))
     # text processing using SOUP
     initialSoup = BeautifulSoup(get_JSON(startURL)['parse']['text'], 'html.parser')
     finalSoup = BeautifulSoup(get_JSON(endURL)['parse']['text'], 'html.parser')
@@ -27,7 +27,26 @@ def heuristic(a: str, b: str) -> float:
     vect = TfidfVectorizer()
     mat = vect.fit_transform(corpus)
     # return cosine similarity
-    return cosine_similarity(mat[0:1], mat)[0][1]
+    return 2/cosine_similarity(mat[0:1], mat)[0][1]
+
+
+def intro_cosine_heuristic(a: str, b: str):
+    """
+    Returns predicted cost (distance) from two titles a to b, through the cosine similarity of two generated
+    term-document matrices of the article. The heuristic in this case is purely semantic.
+
+    The HTML enriched query for the JSON is:
+    https://en.wikipedia.org/api/rest_v1/page/summary/TITLE
+    """
+    query = "https://en.wikipedia.org/api/rest_v1/page/summary/TEMP"
+    startURL = query.replace("TEMP", a.replace(" ", "_"))
+    endURL = query.replace("TEMP", b.replace(" ", "_"))
+    # generate term-document matrices
+    corpus = [get_JSON(startURL)['extract'], get_JSON(endURL)['extract']]
+    vect = TfidfVectorizer()
+    mat = vect.fit_transform(corpus)
+    # return cosine similarity
+    return 2/cosine_similarity(mat[0:1], mat)[0][1]
 
 
 class Article:
@@ -60,7 +79,7 @@ class Article:
             self.parent = None
             self.g = 0
 
-        h = heuristic(title, target)
+        h = intro_cosine_heuristic(title, target)
         self.f = self.g + h
 
     def get_children(self, cont: typing.Union[str, type(None)]) -> List[str]:
