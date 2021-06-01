@@ -7,7 +7,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from bs4 import BeautifulSoup
 from wikiAPI import get_JSON
 from typing import List, Type, Callable
-from semantic_text_similarity.models import WebBertSimilarity
+import urllib.parse
 
 
 def heuristic_0(a: str, b: str) -> float:
@@ -23,8 +23,8 @@ def heuristic_1(a: str, b: str) -> float:
     https://en.wikipedia.org/w/api.php?action=parse&page=TITLE&prop=text&formatversion=2&format=json
     """
     query = "https://en.wikipedia.org/w/api.php?action=parse&page=TEMP&prop=text&formatversion=2&format=json"
-    startURL = query.replace("TEMP", a.replace(" ", "%20"))
-    endURL = query.replace("TEMP", b.replace(" ", "%20"))
+    startURL = (query.replace("TEMP", a.replace(" ", "%20"))).replace("&", "%26")
+    endURL = (query.replace("TEMP", b.replace(" ", "%20"))).replace("&", "%26")
     # text processing using SOUP
     initialSoup = BeautifulSoup(get_JSON(startURL)['parse']['text'], 'html.parser')
     finalSoup = BeautifulSoup(get_JSON(endURL)['parse']['text'], 'html.parser')
@@ -215,4 +215,4 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float] ) ->
     return path
 
 
-# print(a_star("Nucleus", "Tehran", heuristic_0))
+print(a_star("Nucleus", "Tehran", heuristic_2))
