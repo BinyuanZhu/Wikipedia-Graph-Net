@@ -45,8 +45,10 @@ def heuristic_2(a: str, b: str):
     https://en.wikipedia.org/w/api.php?action=query&titles=TITLE&prop=extracts&format=json&exintro=1
     """
     query = "https://en.wikipedia.org/w/api.php?action=query&titles=TEMP&prop=extracts&format=json&exintro=1"
-    startURL = query.replace("TEMP", a.replace(" ", "%20"))
-    endURL = query.replace("TEMP", b.replace(" ", "%20"))
+    atemp = (a.replace(" ", "%20")).replace("&", "#26")
+    btemp = (b.replace(" ", "%20")).replace("&", "#26")
+    startURL = (query.replace("TEMP", atemp))
+    endURL = (query.replace("TEMP", btemp))
     # text processing using SOUP
     startText = get_JSON(startURL)['query']['pages']
     endText = get_JSON(endURL)['query']['pages']
@@ -61,9 +63,11 @@ def heuristic_2(a: str, b: str):
     # return cosine similarity
     return cosine_similarity(mat[0:1], mat)[0][1]
 
+
 def semantic_similarity(a: str, b: str) -> float:
     web_model = WebBertSimilarity(device='cpu', batch_size=10)
     return web_model.predict([(a, b)])
+
 
 class Article:
     """
