@@ -1,14 +1,18 @@
 from __future__ import annotations
+#from _typeshed import NoneType
 import typing
 import requests
+import heapq
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from bs4 import BeautifulSoup
 from wikiAPI import get_JSON
-from typing import List
+from typing import List, Type
 
+def heuristic_0(a: str, b: str) -> float:
+    return 0
 
-def heuristic(a: str, b: str) -> float:
+def heuristic_1(a: str, b: str) -> float:
     """
     Returns predicted cost (distance) from two titles a to b, through the cosine similarity of two generated
     term-document matrices of the article. The heuristic in this case is purely semantic.
@@ -27,7 +31,7 @@ def heuristic(a: str, b: str) -> float:
     vect = TfidfVectorizer()
     mat = vect.fit_transform(corpus)
     # return cosine similarity
-    return cosine_similarity(mat[0:1], mat)[0][1]
+    return 1 / (cosine_similarity(mat[0:1], mat)[0][1])
 
 
 class Article:
@@ -44,14 +48,16 @@ class Article:
     target: str
     g: float
     f: float
-    parent: typing.Union[Article, type(None)]
+    parent: typing.Union[Article, Type(None)]
+    heuristic: function
 
-    def __init__(self, title: str, target: str, parent: typing.Union[Article, type(None)]):
+    def __init__(self, title: str, target: str, parent: typing.Union[Article, Type(None)], heuristic: function):
         """
         Initializes based on [urls/titles/nodes]
         """
         self.title = title
         self.target = target
+        self.heuristic = heuristic
 
         if parent:
             self.parent = parent
@@ -60,10 +66,10 @@ class Article:
             self.parent = None
             self.g = 0
 
-        h = heuristic(title, target)
+        h = self.heuristic(title, target)
         self.f = self.g + h
 
-    def get_children(self, cont: typing.Union[str, type(None)]) -> List[str]:
+    def get_children(self, cont: typing.Union[str, Type(None)]) -> List[str]:
         """
         Return list of connected (children) article object using the wikipedia API functions.
         """
@@ -109,6 +115,19 @@ class Article:
 
         # return [Article(child, self.target, self.title) for child in titles_so_far]
 
+    def __lt__(self, other):
+        return self.f < other.f
+    def __le__(self, other):
+        return self.f <= other.f
+    def __eq__(self, other):
+        return self.title == other.title
+    def __ne__(self, other):
+        return self.title != other.title
+    def __gt__(self, other):
+        return self.f > other.f
+    def __ge__(self, other):
+        return self.f >= other.f
+
 
 class PQ:
     """
@@ -116,33 +135,37 @@ class PQ:
     """
     heap = []
 
-    def __init__(self, root):
-        heap = [0, root]
+    def __init__(self, root: Article):
+        self.heap = [root]
 
-    def insert(self, new: Article) -> None:
+    def insert(self, to_insert: Article) -> None:
         """
         Insert new element in Priority queue
         """
-        pass
+        heapq.heappush(self.heap, to_insert)
 
-    def pop(self, to_remove: str) -> Article:
+    def pop(self) -> Article:
         """
         pops minimum element from priority queue
         """
-        pass
+        return heapq.heappop(self.heap)
 
 
-def a_star(source: str, target: str) -> list:
+def a_star(source: str, target: str, heuristic: function) -> list:
     """
     Returns path from source to target using A* search algorithm.
     """
-    cur: Article = Article(source, target, None)
+    visited: set = set((source))
+    cur: Article = Article(source, target, None, heuristic)
     queue: PQ = PQ(cur)
-    while cur != target:
-        nexts = cur.get_children()
-        for curr in nexts:
-            queue.insert(curr)
+    while cur.title != target:
+        nexts = cur.get_children(None)
+        for next in nexts:
+            if next not in visited:
+                queue.insert(Article(next, target, cur, heuristic))
+                visited.add(next)
         cur = queue.pop()
+        print(cur.f, cur.title)
 
     path = [cur]
 
@@ -151,3 +174,5 @@ def a_star(source: str, target: str) -> list:
         path.insert(0, cur.title)
 
     return path
+
+print(a_star("Nucleus", "Tehran", heuristic_0))
