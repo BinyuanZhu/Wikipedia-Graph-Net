@@ -6,12 +6,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from bs4 import BeautifulSoup
 from wikiAPI import get_JSON
-from typing import List
+from typing import List, Type, Callable
+from semantic_text_similarity.models import WebBertSimilarity
 
 
 def heuristic_0(a: str, b: str) -> float:
     return 0
-
 
 def full_cosine_heuristic(a: str, b: str) -> float:
     """
@@ -53,6 +53,9 @@ def intro_cosine_heuristic(a: str, b: str):
     # return cosine similarity
     return 2/cosine_similarity(mat[0:1], mat)[0][1]
 
+def semantic_similarity(a: str, b: str) -> float:
+    web_model = WebBertSimilarity(device='cpu', batch_size=10)
+    return web_model.predict([(a, b)])
 
 class Article:
     """
@@ -68,10 +71,10 @@ class Article:
     target: str
     g: float
     f: float
-    parent: typing.Union[Article, type(None)]
-    heuristic: type(heuristic_0)
+    parent: typing.Union[Article, Type(None)]
+    heuristic: Callable[[str, str], float] 
 
-    def __init__(self, title: str, target: str, parent: typing.Union[Article, type(None)], heuristic: type(heuristic_0)):
+    def __init__(self, title: str, target: str, parent: typing.Union[Article, Type(None)], heuristic: Callable[[str, str], float] ):
         """
         Initializes based on [urls/titles/nodes]
         """
@@ -86,10 +89,10 @@ class Article:
             self.parent = None
             self.g = 0
 
-        h = intro_cosine_heuristic(title, target)
+        h = self.heuristic(title, target)
         self.f = self.g + h
 
-    def get_children(self, cont: typing.Union[str, type(None)]) -> List[str]:
+    def get_children(self, cont: typing.Union[str, Type(None)]) -> List[str]:
         """
         Return list of connected (children) article object using the wikipedia API functions.
         """
@@ -123,6 +126,9 @@ class Article:
         pages = data["query"]["pages"]
 
         for k, v in pages.items():
+            if "links" not in v:
+                return []
+
             for l in v["links"]:
                 titles_so_far.append(l["title"])
 
@@ -176,7 +182,7 @@ class PQ:
         return heapq.heappop(self.heap)
 
 
-def a_star(source: str, target: str, heuristic: type(heuristic_0)) -> list:
+def a_star(source: str, target: str, heuristic: Callable[[str, str], float] ) -> list:
     """
     Returns path from source to target using A* search algorithm.
     """
@@ -192,7 +198,7 @@ def a_star(source: str, target: str, heuristic: type(heuristic_0)) -> list:
         cur = queue.pop()
         print(cur.f, cur.title)
 
-    path = [cur]
+    path = [cur.title]
 
     while path[0] != source:
         cur = cur.parent
@@ -201,4 +207,5 @@ def a_star(source: str, target: str, heuristic: type(heuristic_0)) -> list:
     return path
 
 
-print(a_star("Nucleus", "Tehran", heuristic_0))
+
+print(a_star("Nucleus", "Tehran", semantic_similarity))
