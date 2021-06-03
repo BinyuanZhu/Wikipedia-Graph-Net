@@ -23,8 +23,10 @@ def heuristic_1(a: str, b: str) -> float:
     https://en.wikipedia.org/w/api.php?action=parse&page=TITLE&prop=text&formatversion=2&format=json
     """
     query = "https://en.wikipedia.org/w/api.php?action=parse&page=TEMP&prop=text&formatversion=2&format=json"
-    startURL = (query.replace("TEMP", a.replace(" ", "%20"))).replace("&", "%26")
-    endURL = (query.replace("TEMP", b.replace(" ", "%20"))).replace("&", "%26")
+    startTitle = (a.replace(" ", "%20")).replace("&", "%26")
+    endTitle = (b.replace(" ", "%20")).replace("&", "%26")
+    startURL = (query.replace("TEMP", startTitle))
+    endURL = (query.replace("TEMP", endTitle))
     # text processing using SOUP
     initialSoup = BeautifulSoup(get_JSON(startURL)['parse']['text'], 'html.parser')
     finalSoup = BeautifulSoup(get_JSON(endURL)['parse']['text'], 'html.parser')
@@ -45,8 +47,8 @@ def heuristic_2(a: str, b: str):
     https://en.wikipedia.org/w/api.php?action=query&titles=TITLE&prop=extracts&format=json&exintro=1
     """
     query = "https://en.wikipedia.org/w/api.php?action=query&titles=TEMP&prop=extracts&format=json&exintro=1"
-    atemp = (a.replace(" ", "%20")).replace("&", "#26")
-    btemp = (b.replace(" ", "%20")).replace("&", "#26")
+    atemp = (a.replace(" ", "%20")).replace("&", "%26")
+    btemp = (b.replace(" ", "%20")).replace("&", "%26")
     startURL = (query.replace("TEMP", atemp))
     endURL = (query.replace("TEMP", btemp))
     # text processing using SOUP
@@ -54,8 +56,12 @@ def heuristic_2(a: str, b: str):
     endText = get_JSON(endURL)['query']['pages']
     startId = list(startText)[0]
     endId = list(endText)[0]
-    initialSoup = BeautifulSoup(startText[startId]['extract'], 'html.parser')
-    finalSoup = BeautifulSoup(endText[endId]['extract'], 'html.parser')
+    # This is so fucking stupid I hate it so much god
+    if 'extract' not in startText[startId]:
+        return 0
+    else:
+        initialSoup = BeautifulSoup(startText[startId]['extract'], 'html.parser')
+        finalSoup = BeautifulSoup(endText[endId]['extract'], 'html.parser')
     # generate term-document matrices
     corpus = [initialSoup.get_text().replace('\n', ' '), finalSoup.get_text().replace('\n', ' ')]
     vect = TfidfVectorizer()
@@ -219,4 +225,4 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float] ) ->
     return path
 
 
-print(a_star("Nucleus", "Tehran", heuristic_2))
+print(a_star("Dog", "Wolf", heuristic_2))

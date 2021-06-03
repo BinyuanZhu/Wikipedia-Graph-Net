@@ -21,7 +21,7 @@ def index():
         links = {title: get_url(title) for title in data}
         length = (len(data) - 2)
     if swap:
-        return render_template('graph.html', data=data, links=links, length = length)
+        return render_template('graph.html', data=data, links=links, length=length)
     else:
         return render_template('index.html', errors=errors, results=results)
 
