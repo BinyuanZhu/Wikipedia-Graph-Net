@@ -19,3 +19,16 @@ dynamically from the start point and the A* algorithm employs
 a priority queue (min-heap implementation) in order to 
 efficiently traverse the graph and look for the desired end 
 article.
+
+## Set Up
+1. Clone the repository onto your local machine.
+2. Navigate to the folder
+3. Set up the correct venv:
+   ```
+   python3 -m venv venv
+   virtualenv venv
+   pip install -r requirements.txt
+   ```
+4. Activate the ```venv``` by running ```source venv/bin/activate```
+5. Use ```flask run``` to run the flask app and navigate to the local host
+    
