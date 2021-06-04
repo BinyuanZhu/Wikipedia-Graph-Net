@@ -70,9 +70,9 @@ def heuristic_2(a: str, b: str):
     return cosine_similarity(mat[0:1], mat)[0][1]
 
 
-def semantic_similarity(a: str, b: str) -> float:
-    web_model = WebBertSimilarity(device='cpu', batch_size=10)
-    return web_model.predict([(a, b)])
+# def semantic_similarity(a: str, b: str) -> float:
+    # web_model = WebBertSimilarity(device='cpu', batch_size=10)
+    # return web_model.predict([(a, b)])
 
 
 class Article:
@@ -90,7 +90,7 @@ class Article:
     g: float
     f: float
     parent: typing.Union[Article, Type(None)]
-    heuristic: Callable[[str, str], float] 
+    heuristic: Callable[[str, str], float]
 
     def __init__(self, title: str, target: str, parent: typing.Union[Article, Type(None)], heuristic: Callable[[str, str], float] ):
         """
@@ -184,8 +184,8 @@ class PQ:
     """
     heap = []
 
-    def __init__(self, root: Article):
-        self.heap = [root]
+    def __init__(self):
+        self.heap = []
 
     def insert(self, to_insert: Article) -> None:
         """
@@ -206,7 +206,8 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float] ) ->
     """
     visited: set = set((source))
     cur: Article = Article(source, target, None, heuristic)
-    queue: PQ = PQ(cur)
+    queue: PQ = PQ()
+
     while cur.title != target:
         nexts = cur.get_children(None)
         for next in nexts:
@@ -225,4 +226,5 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float] ) ->
     return path
 
 
-print(a_star("Dog", "Wolf", heuristic_2))
+print(a_star("Dog", "Wolf", heuristic_2(a, b)))
+
