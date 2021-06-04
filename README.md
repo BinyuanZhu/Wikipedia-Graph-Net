@@ -30,6 +30,8 @@ article.
    pip install -r requirements.txt
    ```
   Make sure that you are inside the venv when you are running ```pip install```
+  <br />
 4. Activate the ```venv``` by running ```source venv/bin/activate```
+  <br />
 5. Use ```flask run``` to run the flask app and navigate to the local host
     
