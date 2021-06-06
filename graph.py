@@ -5,9 +5,8 @@ import heapq
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from bs4 import BeautifulSoup
-from wikiAPI import get_JSON
+from wikiAPI import get_JSON, get_intro, clean_title
 from typing import List, Type, Callable
-import urllib.parse
 
 
 def heuristic_0(a: str, b: str) -> float:
@@ -46,24 +45,13 @@ def heuristic_2(a: str, b: str):
     The HTML enriched query for the JSON is:
     https://en.wikipedia.org/w/api.php?action=query&titles=TITLE&prop=extracts&format=json&exintro=1
     """
-    query = "https://en.wikipedia.org/w/api.php?action=query&titles=TEMP&prop=extracts&format=json&exintro=1"
-    atemp = (a.replace(" ", "%20")).replace("&", "%26")
-    btemp = (b.replace(" ", "%20")).replace("&", "%26")
-    startURL = (query.replace("TEMP", atemp))
-    endURL = (query.replace("TEMP", btemp))
-    # text processing using SOUP
-    startText = get_JSON(startURL)['query']['pages']
-    endText = get_JSON(endURL)['query']['pages']
-    startId = list(startText)[0]
-    endId = list(endText)[0]
-    # This is so fucking stupid I hate it so much god
-    if 'extract' not in startText[startId]:
-        return 0
-    else:
-        initialSoup = BeautifulSoup(startText[startId]['extract'], 'html.parser')
-        finalSoup = BeautifulSoup(endText[endId]['extract'], 'html.parser')
+    query = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=TEMP"
+    aTitle = clean_title(a)
+    bTitle = clean_title(b)
+    startURL = (query.replace("TEMP", aTitle))
+    endURL = (query.replace("TEMP", bTitle))
     # generate term-document matrices
-    corpus = [initialSoup.get_text().replace('\n', ' '), finalSoup.get_text().replace('\n', ' ')]
+    corpus = [get_intro(query.replace("TEMP", startURL)), get_intro(query.replace("TEMP", endURL))]
     vect = TfidfVectorizer()
     mat = vect.fit_transform(corpus)
     # return cosine similarity
@@ -226,5 +214,5 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float] ) ->
     return path
 
 
-print(a_star("Dog", "Wolf", heuristic_2(a, b)))
+# print(a_star("Dog", "Wolf", heuristic_2(a, b)))
 

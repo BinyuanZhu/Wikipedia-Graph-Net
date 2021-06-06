@@ -35,6 +35,7 @@ def get_title(link: str) -> str:
     id = list(file['query']['pages'])[0]
     return file['query']['pages'][id]['title']
 
+
 def get_url(title: str) -> str:
     """
     Given a query that can be assumed to be a valid Wikipedia title, get the link to the article.
@@ -43,6 +44,7 @@ def get_url(title: str) -> str:
     query = title.replace(" ", "%20")
     return articleURL.replace("TEMP", query)
 
+
 def get_intro(link: str) -> str:
     """
     Given a query that can be assumed to be a valid Wikipedia API link to a JSON format, get the intro to the article.
@@ -50,6 +52,7 @@ def get_intro(link: str) -> str:
     file = get_JSON(link)
     id = list(file['query']['pages'])[0]
     return file['query']['pages'][id]['extract']
+
 
 def clean_title(title: str) -> str:
     """
