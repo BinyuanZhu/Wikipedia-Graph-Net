@@ -35,7 +35,6 @@ def get_title(link: str) -> str:
     id = list(file['query']['pages'])[0]
     return file['query']['pages'][id]['title']
 
-
 def get_url(title: str) -> str:
     """
     Given a query that can be assumed to be a valid Wikipedia title, get the link to the article.
@@ -52,4 +51,9 @@ def get_intro(link: str) -> str:
     id = list(file['query']['pages'])[0]
     return file['query']['pages'][id]['extract']
 
-# print(get_JSON(mockURL))
+def clean_title(title: str) -> str:
+    """
+    Cleans a str such that it is appropriate to act as a Wikipedia title
+    """
+    title  = title.replace(" ", "%20")
+    title = title.replace("&", "%26")
