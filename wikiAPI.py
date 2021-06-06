@@ -45,7 +45,7 @@ def get_url(title: str) -> str:
 
 def get_intro(link: str) -> str:
     """
-    Given a query that can be assumed to be a valid Wikipedia API link to a JSON format, get the intro to the article. 
+    Given a query that can be assumed to be a valid Wikipedia API link to a JSON format, get the intro to the article.
     """
     file = get_JSON(link)
     id = list(file['query']['pages'])[0]
@@ -57,4 +57,5 @@ def clean_title(title: str) -> str:
     """
     title = title.replace(" ", "%20")
     title = title.replace("&", "%26")
+    title = title.replace("?", "%3F")
     return title
