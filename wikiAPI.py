@@ -63,7 +63,6 @@ def clean_title(title: str) -> str:
     title = title.replace("?", "%3F")
     return title
 
-
 def get_redirected(title: str) -> str:
     redirectURL = "https://en.wikipedia.org/w/api.php?action=query&format=json&titles=TEMP&redirects"
     title = clean_title(title)
@@ -81,4 +80,4 @@ def compare_titles(a: str, b: str) -> bool:
     """
     a = clean_title(a)
     b = clean_title(b)
-    return get_redirected(a) == get_redirected(b)
+    return clean_title(get_redirected(a)) == clean_title(get_redirected(b))
