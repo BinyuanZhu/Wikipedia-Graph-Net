@@ -55,5 +55,6 @@ def clean_title(title: str) -> str:
     """
     Cleans a str such that it is appropriate to act as a Wikipedia title
     """
-    title  = title.replace(" ", "%20")
+    title = title.replace(" ", "%20")
     title = title.replace("&", "%26")
+    return title
