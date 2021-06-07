@@ -8,6 +8,11 @@ def test(start: str, end: str):
     return [start, "1", "2", "3", end]
 
 
+def output(start: str, end: str) -> list:
+    path = a_star(start, end, heuristic_2)
+    return path
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     errors = []
@@ -18,7 +23,7 @@ def index():
         swap = True
         start = request.form['start']
         end = request.form['end']
-        data = output(start, end)
+        data = test(start, end)
         links = {title: get_url(title) for title in data}
         length = (len(data) - 2)
     if swap:

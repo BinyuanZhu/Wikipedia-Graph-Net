@@ -188,7 +188,7 @@ class PQ:
         return heapq.heappop(self.heap)
 
 
-def a_star(source: str, target: str, heuristic: Callable[[str, str], float] ) -> list:
+def a_star(source: str, target: str, heuristic: Callable[[str, str], float]) -> list:
     """
     Returns path from source to target using A* search algorithm.
     """
