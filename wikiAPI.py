@@ -58,8 +58,28 @@ def clean_title(title: str) -> str:
     """
     Cleans a str such that it is appropriate to act as a Wikipedia title
     """
-    temp = title
-    temp = temp.replace(" ", "%20")
-    temp = temp.replace("&", "%26")
-    temp = temp.replace("?", "%3F")
-    return temp
+    title = title.replace(" ", "%20")
+    title = title.replace("&", "%26")
+    title = title.replace("?", "%3F")
+    return title
+
+
+def get_redirected(title: str) -> str:
+    redirectURL = "https://en.wikipedia.org/w/api.php?action=query&format=json&titles=TEMP&redirects"
+    title = clean_title(title)
+    query = redirectURL.replace('TEMP', title)
+    file = get_JSON(query)
+    data = file['query']
+    if "redirects" in data:
+        return data['redirects'][0]['to']
+    else:
+        return title
+
+
+def compare_titles(a: str, b: str) -> bool:
+    """
+    Compares two titles to see if they are equal. Checks for redirected titles.
+    """
+    a = clean_title(a)
+    b = clean_title(b)
+    return clean_title(get_redirected(a)) == clean_title(get_redirected(b))

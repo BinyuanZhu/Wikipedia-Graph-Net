@@ -1,9 +1,10 @@
 from app import app
 from wikiAPI import *
+from graph import a_star, heuristic_0, heuristic_1, heuristic_2
 from flask import Flask, render_template, request
 
 
-def output(start: str, end: str):
+def test(start: str, end: str):
     return [start, "1", "2", "3", end]
 
 

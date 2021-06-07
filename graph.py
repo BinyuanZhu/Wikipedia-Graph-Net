@@ -37,7 +37,7 @@ def heuristic_1(a: str, b: str) -> float:
     return cosine_similarity(mat[0:1], mat)[0][1]
 
 
-def heuristic_2(a: str, b: str):
+def heuristic_2(a: str, b: str) -> float:
     """
     Returns predicted cost (distance) from two titles a to b, through the cosine similarity of two generated
     term-document matrices of the article. The heuristic in this case is purely semantic.
@@ -214,5 +214,5 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float] ) ->
     return path
 
 
-# print(a_star("Dog", "Wolf", heuristic_2(a, b)))
+# print(a_star("Dog", "Wolf", heuristic_2))
 
