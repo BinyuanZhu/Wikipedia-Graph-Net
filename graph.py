@@ -46,11 +46,14 @@ def heuristic_2(a: str, b: str) -> float:
     https://en.wikipedia.org/w/api.php?action=query&titles=TITLE&prop=extracts&format=json&exintro=1
     """
     # generate term-document matrices
-    corpus = [get_intro(a), get_intro(b)]
-    vect = TfidfVectorizer()
-    mat = vect.fit_transform(corpus)
-    # return cosine similarity
-    return cosine_similarity(mat[0:1], mat)[0][1]
+    if get_intro(a) == "" or get_intro(b) == "":
+        return 0
+    else:
+        corpus = [get_intro(a), get_intro(b)]
+        vect = TfidfVectorizer()
+        mat = vect.fit_transform(corpus)
+        # return cosine similarity
+        return cosine_similarity(mat[0:1], mat)[0][1]
 
 
 # def semantic_similarity(a: str, b: str) -> float:

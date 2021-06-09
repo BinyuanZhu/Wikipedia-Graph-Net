@@ -54,7 +54,11 @@ def get_intro(title: str) -> str:
     link = (query.replace("TEMP", tempTitle))
     file = get_JSON(link)
     id = list(file['query']['pages'])[0]
-    return file['query']['pages'][id]['extract']
+    data = file['query']['pages'][id]
+    if 'extract' not in data:
+        return ''
+    else:
+        return data['extract']
 
 
 def clean_title(title: str) -> str:
