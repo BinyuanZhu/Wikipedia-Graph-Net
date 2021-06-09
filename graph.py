@@ -10,7 +10,10 @@ from typing import List, Type, Callable
 
 
 def heuristic_0(a: str, b: str) -> float:
-    return 0
+    if "wolf" in a or "ora" in a:
+        return 0
+    return 2
+
 
 
 def heuristic_1(a: str, b: str) -> float:
@@ -152,17 +155,16 @@ class Article:
         return self.f <= other.f
 
     def __eq__(self, other):
-        return self.title == other.title
+        return compare_titles(self.title, other.title)
 
     def __ne__(self, other):
-        return self.title != other.title
+        return not compare_titles(self.title, other.title)
 
     def __gt__(self, other):
         return self.f > other.f
 
     def __ge__(self, other):
         return self.f >= other.f
-
 
 class PQ:
     """
@@ -192,16 +194,18 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float]) -> 
     """
     visited: set = set((source))
     cur: Article = Article(source, target, None, heuristic)
-    queue: PQ = PQ()
+    queue = PQ()
 
     while not compare_titles(cur.title, target):
         nexts = cur.get_children(None)
         for next in nexts:
             if next not in visited:
-                queue.insert(Article(next, target, cur, heuristic))
+                article = Article(next, target, cur, heuristic)
+                queue.insert(article)
                 visited.add(next)
+                print(article.f, article.title)
         cur = queue.pop()
-        print(cur.f, cur.title)
+        print("CUR:", cur.f, cur.title)
 
     path = [cur.title]
 
@@ -210,6 +214,5 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float]) -> 
         path.insert(0, cur.title)
 
     return path
-
 
 # print(a_star("Dog", "Aardwolf", heuristic_2))
