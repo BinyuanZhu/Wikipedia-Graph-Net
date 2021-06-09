@@ -45,10 +45,13 @@ def get_url(title: str) -> str:
     return articleURL.replace("TEMP", query)
 
 
-def get_intro(link: str) -> str:
+def get_intro(title: str) -> str:
     """
     Given a query that can be assumed to be a valid Wikipedia API link to a JSON format, get the intro to the article.
     """
+    query = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=TEMP"
+    tempTitle = clean_title(title)
+    link = (query.replace("TEMP", tempTitle))
     file = get_JSON(link)
     id = list(file['query']['pages'])[0]
     return file['query']['pages'][id]['extract']

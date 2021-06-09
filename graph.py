@@ -45,13 +45,8 @@ def heuristic_2(a: str, b: str) -> float:
     The HTML enriched query for the JSON is:
     https://en.wikipedia.org/w/api.php?action=query&titles=TITLE&prop=extracts&format=json&exintro=1
     """
-    query = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=TEMP"
-    aTitle = clean_title(a)
-    bTitle = clean_title(b)
-    startURL = (query.replace("TEMP", aTitle))
-    endURL = (query.replace("TEMP", bTitle))
     # generate term-document matrices
-    corpus = [get_intro(query.replace("TEMP", startURL)), get_intro(query.replace("TEMP", endURL))]
+    corpus = [get_intro(a), get_intro(b)]
     vect = TfidfVectorizer()
     mat = vect.fit_transform(corpus)
     # return cosine similarity
