@@ -5,7 +5,7 @@ import heapq
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from bs4 import BeautifulSoup
-from wikiAPI import get_JSON, get_intro, clean_title, compare_titles
+from wikiAPI import get_JSON, get_intro, compare_titles
 from typing import List, Type, Callable
 
 
@@ -194,8 +194,7 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float]) -> 
     cur: Article = Article(source, target, None, heuristic)
     queue: PQ = PQ()
 
-    # while not compare_titles(cur.title, target):
-    while cur.title != target:
+    while not compare_titles(cur.title, target):
         nexts = cur.get_children(None)
         for next in nexts:
             if next not in visited:
@@ -213,4 +212,4 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float]) -> 
     return path
 
 
-# print(a_star("Dog", "Wolf", heuristic_2))
+# print(a_star("Dog", "Aardwolf", heuristic_2))

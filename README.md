@@ -7,6 +7,7 @@ the start and goal article by creating a graph and searching
 through it optimally using an A* search heuristic.
 
 ### Test Ideas
+_"Dog"_ and _"Aardwolf"_
 _"Cell nucleus"_ and _"Cell biology"_
 
 ## Heuristic

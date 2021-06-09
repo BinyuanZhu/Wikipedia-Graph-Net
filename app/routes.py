@@ -5,7 +5,7 @@ from flask import Flask, render_template, request
 
 
 def err():
-    return ["You are seeing this page because you did not choose a heuristic."]
+    return ["You are seeing this page in error."]
 
 
 @app.route('/', methods=['GET', 'POST'])
