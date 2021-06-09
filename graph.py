@@ -34,7 +34,7 @@ def heuristic_1(a: str, b: str) -> float:
     vect = TfidfVectorizer()
     mat = vect.fit_transform(corpus)
     # return cosine similarity
-    return cosine_similarity(mat[0:1], mat)[0][1]
+    return abs(1 - cosine_similarity(mat[0:1], mat)[0][1]) * 2
 
 
 def heuristic_2(a: str, b: str) -> float:
@@ -47,13 +47,13 @@ def heuristic_2(a: str, b: str) -> float:
     """
     # generate term-document matrices
     if get_intro(a) == "" or get_intro(b) == "":
-        return 0
+        return 2
     else:
         corpus = [get_intro(a), get_intro(b)]
         vect = TfidfVectorizer()
         mat = vect.fit_transform(corpus)
         # return cosine similarity
-        return cosine_similarity(mat[0:1], mat)[0][1]
+        return abs(1 - cosine_similarity(mat[0:1], mat)[0][1]) * 2
 
 
 # def semantic_similarity(a: str, b: str) -> float:
@@ -194,7 +194,8 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float]) -> 
     cur: Article = Article(source, target, None, heuristic)
     queue: PQ = PQ()
 
-    while not compare_titles(cur.title, target):
+    # while not compare_titles(cur.title, target):
+    while cur.title != target:
         nexts = cur.get_children(None)
         for next in nexts:
             if next not in visited:
@@ -212,5 +213,4 @@ def a_star(source: str, target: str, heuristic: Callable[[str, str], float]) -> 
     return path
 
 
-print(a_star("Dog", "Wolf", heuristic_2))
-
+# print(a_star("Dog", "Wolf", heuristic_2))
