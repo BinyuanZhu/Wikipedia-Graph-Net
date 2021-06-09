@@ -6,6 +6,9 @@ possible. This program's goal is to accomplish this task given
 the start and goal article by creating a graph and searching 
 through it optimally using an A* search heuristic.
 
+### Test Ideas
+_"Cell nucleus"_ and _"Cell biology"_
+
 ## Heuristic
 Because of the semantic nature of the heuristic, we have 
 developed multiple heuristics in the form of ```heuristic_#``` 
@@ -15,8 +18,8 @@ generated from the article intros.
 
 ## How It Works
 Essentially, a graph of ```Article``` classes are generated 
-dynamically from the start point and the A* algorithm employs
-a priority queue (min-heap implementation) in order to 
+dynamically from the start point and the **A*** algorithm employs
+a priority queue _(min-heap implementation)_ in order to 
 efficiently traverse the graph and look for the desired end 
 article.
 
