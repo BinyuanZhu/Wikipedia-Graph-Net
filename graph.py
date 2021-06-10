@@ -10,10 +10,7 @@ from typing import List, Type, Callable
 
 
 def heuristic_0(a: str, b: str) -> float:
-    if "wolf" in a or "ora" in a:
-        return 0
     return 2
-
 
 
 def heuristic_1(a: str, b: str) -> float:
