@@ -3,7 +3,10 @@ This file contains all the WikiMedia API request related functions. A sample cal
 https://en.wikipedia.org/w/api.php?action=query&titles=Albert%20Einstein&prop=links&pllimit=max
 for the query Albert Eintein
 """
+from __future__ import annotations
 import requests
+import typing
+
 
 mockTitle = "Dog"
 mockURL = "https://en.wikipedia.org/w/api.php?action=query&titles=Apple&prop=links&pllimit=max&format=json"
@@ -73,8 +76,8 @@ def clean_title(title: str) -> str:
 
 def get_redirected(title: str) -> str:
     redirectURL = "https://en.wikipedia.org/w/api.php?action=query&format=json&titles=TEMP&redirects"
-    title = clean_title(title)
-    query = redirectURL.replace('TEMP', title)
+    cTitle = clean_title(title)
+    query = redirectURL.replace('TEMP', cTitle)
     file = get_JSON(query)
     data = file['query']
     if "redirects" in data:
