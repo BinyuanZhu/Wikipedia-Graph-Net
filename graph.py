@@ -145,6 +145,14 @@ class Article:
 
         # return [Article(child, self.target, self.title) for child in titles_so_far]
 
+    def get_first_x(self, lst: List, x: int) -> List:
+        lst_so_far = []
+
+        for i in range(x):
+            lst_so_far.append(lst[i])
+
+        return lst_so_far
+
     def __lt__(self, other):
         return self.f < other.f
 
